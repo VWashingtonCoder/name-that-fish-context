@@ -6,7 +6,7 @@ import { ScoreContext } from "./ScoreProvider";
 export const ScoreBoard = () => {
   const {
     answersLeft,
-    score: { correctCount, incorrectCount }
+    score: { correctCount, incorrectCount },
   } = useContext(ScoreContext);
 
   return (

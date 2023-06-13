@@ -2,52 +2,42 @@ import React, { useContext, useState } from "react";
 import { Images } from "../assets/images";
 
 export const ScoreContext = React.createContext();
+const initialFishes = [
+  { name: "trout", url: Images.trout },
+  { name: "salmon", url: Images.salmon },
+  { name: "tuna", url: Images.tuna },
+  { name: "shark", url: Images.shark },
+];
+const initialScore = {
+  correctCount: 0,
+  incorrectCount: 0,
+  totalCount: initialFishes.length,
+};
 
 const ScoreProvider = ({ children }) => {
-  const initialFishes = [
-    { name: "trout", url: Images.trout },
-    { name: "salmon", url: Images.salmon },
-    { name: "tuna", url: Images.tuna },
-    { name: "shark", url: Images.shark },
-  ];
-  const initialAnswers = ["trout", "salmon", "shark", "tuna"];
-  
-  const initialScore = {
-    correctCount: 0,
-    incorrectCount: 0,
-    totalCount: initialAnswers.length
-  }
-
+  const [currentFishIdx, setCurrentFishIdx] = useState(0);
   const [score, setScore] = useState(initialScore);
-  const [answersLeft, setAnswersLeft] = useState(initialAnswers);
-  const [nextFishToName, setNextFishToName] = useState(initialFishes[0]);
+  const answersLeft = initialFishes
+    .slice(currentFishIdx)
+    .map((fish) => fish.name);
 
-  const guessTheFish = (e) => {
-    e.preventDefault();
-    const { value } = e.target["fish-guess"];
-
-    const newAnswersLeft = answersLeft.filter(answer => answer !== nextFishToName.name);
-    const nextFishName = newAnswersLeft[Math.floor(Math.random() * newAnswersLeft.length)];
-    const nextFish = initialFishes.find(fish => fish.name === nextFishName);
-
-    value.toLowerCase().trim() === nextFishToName.name 
+  const guessTheFish = (name) => {
+    name.toLowerCase().trim() === initialFishes[currentFishIdx].name
       ? setScore({ ...score, correctCount: score.correctCount + 1 })
       : setScore({ ...score, incorrectCount: score.incorrectCount + 1 });
-    
-    setAnswersLeft(newAnswersLeft);
-    setNextFishToName(nextFish);
-  }
+    setCurrentFishIdx(currentFishIdx + 1);
+  };
 
   const contextInfo = {
     answersLeft: answersLeft,
-    nextFishToName: nextFishToName,
+    currentFish: initialFishes[currentFishIdx],
     score: score,
-    guessTheFish: (e) => guessTheFish(e)
-  }
+    guessTheFish,
+  };
 
   return (
     <ScoreContext.Provider value={contextInfo}>
-        {children}
+      {children}
     </ScoreContext.Provider>
   );
 };

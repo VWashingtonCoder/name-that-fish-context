@@ -11,17 +11,14 @@ function App() {
 
   return (
     <div className="App">
-      {answersLeft.length > 0 
-        ? (
-          <header>
-            <ScoreBoard />
-            <GameBoard />
-          </header>
-        ) : (
-            <FinalScore />
-        )
-      }
-      
+      {answersLeft.length > 0 ? (
+        <header>
+          <ScoreBoard />
+          <GameBoard />
+        </header>
+      ) : (
+        <FinalScore />
+      )}
     </div>
   );
 }
